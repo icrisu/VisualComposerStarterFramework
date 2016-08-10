@@ -1,13 +1,25 @@
 <?php
 // don't load directly
 if (!defined('ABSPATH')) die('-1');
+
+require_once(dirname(__FILE__) . '/blocks/blocks.php');
 /**
 * core class
 */
-class Class_IsotopeVC
+class BlocksWPCore
 {
 	private $pluginFile;
+
 	protected static $instance;
+	protected static $blocks = array();
+
+	function __construct() {
+		foreach (BlocksWP_Isotope::getBlocks() as $block) {
+			require_once(dirname(__FILE__) . '/blocks' . $block['blockPath']);
+			$blockInstance = new $block['class']($block['options']);
+			array_push(self::$blocks, $blockInstance);
+		}
+	}
 
 	public static function getInstance() {
         if (!isset(self::$instance)) {
@@ -29,6 +41,12 @@ class Class_IsotopeVC
         }
 	}
 
+	public function vcMapsInit() {
+        foreach (self::$blocks as $block) {
+        	$block->map();
+        }
+	}
+
     /*
     Show notice if your plugin is activated but Visual Composer is not
     */
@@ -40,12 +58,17 @@ class Class_IsotopeVC
         </div>';
     }	
 
-
+    public function wpEnqueueScriptsHandler() {
+		wp_register_script('appetit_packery', APPETIT_FRONT_URI.'/libs/packery/packery.min.js', array('jquery'), FALSE, TRUE);
+		wp_enqueue_script('appetit_packery');	    	
+    }
 
 	public function run($pluginFile) {
 		$this->pluginFile = $pluginFile;
 		add_action('init', array($this, 'initializeHandler'));
-		
+		add_action('vc_after_init', array($this, 'vcMapsInit'));
+		//add_action('wp_enqueue_scripts', array($this, 'wpEnqueueScriptsHandler'));
+		//add_action('admin_enqueue_scripts', array($this, 'adminEnqueueScriptsHandler'));
 	}	
 }
 ?>

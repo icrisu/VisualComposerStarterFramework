@@ -9,8 +9,11 @@ Author URI: http://sakuraplugins.com/
 */
 
 
-require_once(__DIR__.'/com/sakuraplugins/core.php');
+// don't load directly
+if (!defined('ABSPATH')) die('-1');
 
-$core = Class_IsotopeVC()::getInstance()->run(__FILE__);
+
+require_once(__DIR__.'/com/sakuraplugins/core.php');
+BlocksWPCore::getInstance()->run(__FILE__);
 
 ?>

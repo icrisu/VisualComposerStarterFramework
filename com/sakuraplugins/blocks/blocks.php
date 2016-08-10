@@ -2,7 +2,7 @@
 /**
 * describe blocks
 */
-class BlocksWP_Isotope {
+class BlocksWP {
 	
 	public static function getBlocks() {
 		return array(

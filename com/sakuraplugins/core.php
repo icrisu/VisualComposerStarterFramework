@@ -14,7 +14,7 @@ class BlocksWPCore
 	protected static $blocks = array();
 
 	function __construct() {
-		foreach (BlocksWP_Isotope::getBlocks() as $block) {
+		foreach (BlocksWP::getBlocks() as $block) {
 			require_once(dirname(__FILE__) . '/blocks' . $block['blockPath']);
 			$blockInstance = new $block['class']($block['options']);
 			array_push(self::$blocks, $blockInstance);
